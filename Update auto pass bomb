@@ -1,0 +1,66 @@
+--[[
+    TIMEBOMB_ELITE_V2_OBFUSCATED
+    SECURITY_LEVEL: HIGH
+    ENCRYPTION: HEX_STRING_MANGLE
+]]
+
+local _0xL1 = game:GetService("\80\108\97\121\101\114\115")
+local _0xL2 = _0xL1.LocalPlayer
+local _0xActive = false
+
+-- UI CONSTRUCTION (HEX ENCODED)
+local _0xG = Instance.new("\83\99\114\101\101\110\71\117\105", _0xL2.PlayerGui)
+_0xG.Name = "\84\66\95\69\108\105\116\101"
+_0xG.ResetOnSpawn = false
+
+local _0xM = Instance.new("\70\114\97\109\101", _0xG)
+_0xM.Size = UDim2.new(0, 160, 0, 70); _0xM.Position = UDim2.new(0.5, -80, 0.1, 0)
+_0xM.BackgroundColor3 = Color3.fromRGB(15, 15, 15); _0xM.Active = true; _0xM.Draggable = true
+Instance.new("\85\73\67\111\114\110\101\114", _0xM)
+
+local _0xB = Instance.new("\84\101\120\116\66\117\116\116\111\110", _0xM)
+_0xB.Size = UDim2.new(0.9, 0, 0.8, 0); _0xB.Position = UDim2.new(0.05, 0, 0.1, 0)
+_0xB.Text = "\65\67\84\73\86\65\84\69\32\69\76\73\84\69"; _0xB.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+_0xB.TextColor3 = Color3.new(1, 1, 1); _0xB.TextScaled = true; Instance.new("\85\73\67\111\114\110\101\114", _0xB)
+
+-- AUTO PASS BOMB LOGIC
+local function _0xPass()
+    pcall(function()
+        if _0xL2.Character:FindFirstChild("\66\111\109\98") or _0xL2.Character:FindFirstChild("\84\105\109\101\98\111\109\98") then
+            for _, v in pairs(_0xL1:GetPlayers()) do
+                if v ~= _0xL2 and v.Character and v.Character:FindFirstChild("\72\117\109\97\110\111\105\100\82\111\111\116\80\97\114\116") then
+                    local dist = (_0xL2.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude
+                    if dist < 25 then -- Auto pass range
+                        _0xL2.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- MAIN EXECUTION
+_0xB.MouseButton1Click:Connect(function()
+    _0xActive = not _0xActive
+    _0xB.Text = _0xActive and "\69\76\73\84\69\32\79\78" or "\69\76\73\84\69\32\79\70\70"
+    _0xB.BackgroundColor3 = _0xActive and Color3.fromRGB(0, 120, 0) or Color3.fromRGB(120, 0, 0)
+    
+    task.spawn(function()
+        while _0xActive do
+            pcall(function()
+                -- JUMP BYPASS
+                local h = _0xL2.Character.Humanoid
+                h.UseJumpPower = true; h.JumpPower = 50
+                h:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+                -- BOMB PASS
+                _0xPass()
+            end)
+            task.wait(0.2)
+        end
+    end)
+end)
+
+-- ANTI-LAG BOOST
+for _, v in pairs(game:GetDescendants()) do
+    if v:IsA("\80\97\114\116\105\99\108\101\69\109\105\116\116\101\114") or v:IsA("\84\114\97\105\108") then v.Enabled = false end
+end
