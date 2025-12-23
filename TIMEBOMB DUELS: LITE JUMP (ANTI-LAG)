@@ -1,0 +1,47 @@
+local _0xP = game:GetService("Players")
+local _0xL = _0xP.LocalPlayer
+
+local _0xG = Instance.new("ScreenGui", _0xL.PlayerGui)
+_0xG.Name = "Timebomb_Lite"
+_0xG.ResetOnSpawn = false
+
+local _0xMain = Instance.new("Frame", _0xG)
+_0xMain.Size = UDim2.new(0, 160, 0, 60); _0xMain.Position = UDim2.new(0.5, -80, 0.1, 0)
+_0xMain.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _0xMain.Active = true; _0xMain.Draggable = true
+Instance.new("UICorner", _0xMain)
+
+local _0xBtn = Instance.new("TextButton", _0xMain)
+_0xBtn.Size = UDim2.new(0.9, 0, 0.8, 0); _0xBtn.Position = UDim2.new(0.05, 0, 0.1, 0)
+_0xBtn.Text = "ACTIVATE JUMP"; _0xBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+_0xBtn.TextColor3 = Color3.new(1, 1, 1); _0xBtn.TextScaled = true; Instance.new("UICorner", _0xBtn)
+
+-- ANTI-LAG: TANGGAL PABIGAT
+local function _0xBoost()
+    for _, v in pairs(game:GetDescendants()) do
+        if v:IsA("ParticleEmitter") or v:IsA("Trail") then v.Enabled = false end
+    end
+end
+_0xBoost()
+
+-- OPTIMIZED JUMP LOGIC
+local active = false
+_0xBtn.MouseButton1Click:Connect(function()
+    active = not active
+    _0xBtn.Text = active and "JUMP: ON" or "JUMP: OFF"
+    _0xBtn.BackgroundColor3 = active and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(150, 0, 0)
+    
+    task.spawn(function()
+        while active do
+            pcall(function()
+                local hum = _0xL.Character and _0xL.Character:FindFirstChild("Humanoid")
+                if hum then
+                    -- Gagamit tayo ng UseJumpPower para sigurado
+                    hum.UseJumpPower = true
+                    hum.JumpPower = 50
+                    hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+                end
+            end)
+            task.wait(0.3) -- Dito ang sikreto! 0.3s delay para hindi mag-lag ang phone
+        end
+    end)
+end)
